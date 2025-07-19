@@ -4,10 +4,16 @@ import { Badge } from "../components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { Button } from "../components/ui/button";
 import { Briefcase, Code, Github, Linkedin, Mail, MapPin, Phone, Pencil, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditProfileDialog from "../components/features/EditProfileDialog";
 import type { Profile as ProfileType } from "../components/features/EditProfileDialog";
 import { Popover, PopoverTrigger, PopoverContent } from "../components/ui/popover";
+import { api } from "convex/_generated/api";
+import { useQuery } from "convex/react";
+import { useConvexAuth } from "convex/react";
+import { useAuthActions } from "@convex-dev/auth/react";
+import { useNavigate } from "react-router";
+import { useMutation } from "convex/react";
 
 export function Profile() {
   const [profile, setProfile] = useState<ProfileType>({
@@ -33,6 +39,34 @@ export function Profile() {
     ],
   });
   const [editOpen, setEditOpen] = useState(false);
+  const { isLoading, isAuthenticated } = useConvexAuth();
+  const { signOut } = useAuthActions();
+  const navigate = useNavigate();
+  const updateProfileMutation = useMutation(api.profile.updateProfile);
+
+  // Redirect to home if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate("/");
+    }
+  }, [isLoading, isAuthenticated, navigate]);
+
+  // Fetch the profile from Convex
+  const profileData = useQuery(api.profile.getProfile, {});
+
+  useEffect(() => {
+    if (profileData) {
+      setProfile({
+        name: profileData.displayName || "",
+        profession: profileData.profession || "",
+        location: profileData.location || "",
+        contact: profileData.email || "",
+        bio: profileData.bio || "",
+        avatarUrl: profileData.avatarUrl || "",
+        skills: profileData.skills || [],
+      });
+    }
+  }, [profileData]);
 
   return (
     <main className="flex items-center justify-center pt-16 pb-4 bg-background text-foreground">
@@ -57,7 +91,21 @@ export function Profile() {
             onOpenChange={setEditOpen}
             profile={profile}
             onSave={setProfile}
+            onSaveToBackend={async (edit) => {
+              await updateProfileMutation({
+                displayName: edit.name,
+                avatarUrl: edit.avatarUrl,
+                skills: edit.skills,
+                profession: edit.profession,
+                location: edit.location,
+                bio: edit.bio,
+              });
+            }}
           />
+          {/* Logout Button */}
+          <Button size="icon" variant="outline" className="border-neutral-300 text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900" aria-label="Logout" onClick={() => signOut()}>
+            Logout
+          </Button>
         </div>
         <div className="flex h-32 w-32 border-2 mb-2 border-neutral-200 rounded-full overflow-hidden relative">
           <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover absolute top-0 left-0 grayscale-100" />

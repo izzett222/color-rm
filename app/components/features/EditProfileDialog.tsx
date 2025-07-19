@@ -18,9 +18,10 @@ type EditProfileDialogProps = {
   onOpenChange: (open: boolean) => void;
   profile: Profile;
   onSave: (profile: Profile) => void;
+  onSaveToBackend?: (profile: Profile) => Promise<void>;
 };
 
-export default function EditProfileDialog({ open, onOpenChange, profile, onSave }: EditProfileDialogProps) {
+export default function EditProfileDialog({ open, onOpenChange, profile, onSave, onSaveToBackend }: EditProfileDialogProps) {
   const [edit, setEdit] = useState<Profile>(profile);
   const [skillInput, setSkillInput] = useState("");
 
@@ -37,9 +38,12 @@ export default function EditProfileDialog({ open, onOpenChange, profile, onSave 
     setEdit({ ...edit, skills: edit.skills.filter((s) => s !== skill) });
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     onSave(edit);
+    if (onSaveToBackend) {
+      await onSaveToBackend(edit);
+    }
     onOpenChange(false);
   }
 
