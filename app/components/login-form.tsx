@@ -16,11 +16,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router";
 
+import { toast } from "sonner";
+
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters long" }),
+    .min(8, { message: "Password must be at least 6 characters long" }),
 });
 type LoginFormInputs = z.infer<typeof loginSchema>;
 
@@ -41,12 +43,36 @@ export function LoginForm({
   });
 
   const onSubmit = async (data: LoginFormInputs) => {
-    await signIn("password", {
-      ...data,
-      flow: isSignup ? "signUp" : "signIn",
-    });
-    navigate("/");
-    
+    try {
+      await signIn("password", {
+        ...data,
+        flow: isSignup ? "signUp" : "signIn",
+      });
+      navigate("/");
+    } catch (error) {
+      const err = error as Error;
+      if (err?.stack?.includes("InvalidAccountId")) {
+        toast("Account not found", {
+          description:
+            "Please check your email and password or Signup for a new account.",
+        });
+      } else if (err?.stack?.includes("InvalidSecret")) {
+        // Show "Incorrect password" message
+        toast("Incorrect password", {
+          description: "Please check your password and try again.",
+        });
+      } else if (err?.stack?.includes("TooManyFailedAttempts")) {
+        // Show "Too many failed attempts" message
+        toast("Too many failed attempts", {
+          description: "Please try again later.",
+        });
+      } else if (err?.stack?.includes("Invalid password")) {
+        // Show "Invalid password" message
+        toast("Invalid password", {
+          description: "Please check your password and try again.",
+        });
+      }
+    }
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
