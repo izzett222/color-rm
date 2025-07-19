@@ -66,6 +66,11 @@ export function LoginForm({
         toast("Too many failed attempts", {
           description: "Please try again later.",
         });
+      } else if (err?.stack?.includes("Invalid password")) {
+        // Show "Invalid password" message
+        toast("Invalid password", {
+          description: "Please check your password and try again.",
+        });
       }
     }
   };
