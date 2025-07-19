@@ -166,8 +166,8 @@ export default function UpdateRoadmap({ id }: { id: string }) {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge className={getDifficultyColor("Beginner")}>
-                            Beginner
+                          <Badge className={getDifficultyColor(section.difficulty)}>
+                            {section.difficulty}
                           </Badge>
                           {true && (
                             <CheckCircle className="w-5 h-5 text-green-500" />

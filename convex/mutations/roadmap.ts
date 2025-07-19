@@ -31,6 +31,11 @@ export const createRoadmapSection = mutation({
     link: v.string(),
     type: v.union(v.literal("video"), v.literal("text")),
     time: v.number(),
+    difficulty: v.union(
+      v.literal("beginner"),
+      v.literal("intermediate"),
+      v.literal("advanced")
+    ),
   },
   handler: async (ctx, args) => {
     // 1. Check user authentication
@@ -53,6 +58,7 @@ export const createRoadmapSection = mutation({
       link: args.link,
       type: args.type,
       time: args.time,
+      difficulty: args.difficulty ?? "beginner", // Default difficulty
     });
   },
 });
