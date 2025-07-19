@@ -16,6 +16,11 @@ const schema = defineSchema({
     roadmapId: v.id("roadmaps"),
     link: v.string(),
     type: v.union(v.literal("video"), v.literal("text")),
+    difficulty: v.union(
+      v.literal("beginner"),
+      v.literal("intermediate"),
+      v.literal("advanced")
+    ),
     time: v.number(), // Use v.number() for time in seconds or minutes as appropriate
   }),
 });
