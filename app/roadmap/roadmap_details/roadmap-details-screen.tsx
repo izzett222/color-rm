@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { IoMdShare } from "react-icons/io";
-import CourseRoadmap from "./course_roadmap";
+import CourseRoadmap from "./course-roadmap";
 
 function RoadMapDetailsScreen() {
   return (
