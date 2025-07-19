@@ -22,7 +22,7 @@ const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 6 characters long" }),
+    .min(8, { message: "Password must be at least 8 characters long" }),
 });
 type LoginFormInputs = z.infer<typeof loginSchema>;
 
@@ -44,11 +44,13 @@ export function LoginForm({
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      await signIn("password", {
+      const result = await signIn("password", {
         ...data,
         flow: isSignup ? "signUp" : "signIn",
       });
-      navigate("/");
+      toast.success("Login successful", {
+        description: "You are now logged in.",
+      });
     } catch (error) {
       const err = error as Error;
       if (err?.stack?.includes("InvalidAccountId")) {

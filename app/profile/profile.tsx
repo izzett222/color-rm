@@ -3,10 +3,11 @@
 import { Badge } from "../components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import { Button } from "../components/ui/button";
-import { Briefcase, Code, Github, Linkedin, Mail, MapPin, Phone, Pencil } from "lucide-react";
+import { Briefcase, Code, Github, Linkedin, Mail, MapPin, Phone, Pencil, Plus } from "lucide-react";
 import { useState } from "react";
 import EditProfileDialog from "../components/features/EditProfileDialog";
 import type { Profile as ProfileType } from "../components/features/EditProfileDialog";
+import { Popover, PopoverTrigger, PopoverContent } from "../components/ui/popover";
 
 export function Profile() {
   const [profile, setProfile] = useState<ProfileType>({
@@ -37,6 +38,17 @@ export function Profile() {
     <main className="flex items-center justify-center pt-16 pb-4 bg-background text-foreground">
       <div className="flex flex-col items-center w-full max-w-xl px-4 relative">
         <div className="absolute right-0 top-0 flex gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size="icon" variant="outline" className="border-neutral-300 text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900" aria-label="Add">
+                <Plus className="w-5 h-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-40 p-2 flex flex-col gap-2">
+              <Button variant="ghost" className="justify-start w-full">Add Post/Project</Button>
+              <Button variant="ghost" className="justify-start w-full">Add Roadmap</Button>
+            </PopoverContent>
+          </Popover>
           <Button size="icon" variant="outline" className="border-neutral-300 text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900" aria-label="Edit Profile" onClick={() => setEditOpen(true)}>
             <Pencil className="w-5 h-5" />
           </Button>
