@@ -32,6 +32,12 @@ enum SectionType {
   TEXT = "text",
 }
 
+enum Difficulty {
+  BEGINNER = "beginner",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
+}
+
 export const sectionFormSchema = z.object({
   title: z
     .string()
@@ -58,6 +64,7 @@ export const sectionFormSchema = z.object({
     .min(1, "Time must be at least 1 minute")
     .max(999, "Time cannot exceed 999 minutes")
     .int("Time must be a whole number"),
+  difficulty: z.enum(Difficulty),
 });
 
 export type SectionFormData = z.infer<typeof sectionFormSchema>;
@@ -82,6 +89,7 @@ export default function AddSectionForm({
       link: "",
       type: SectionType.VIDEO,
       time: 1,
+      difficulty: Difficulty.BEGINNER, // Default difficulty
     },
   });
 
@@ -196,6 +204,32 @@ export default function AddSectionForm({
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="difficulty"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Type *</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="beginner">beginner</SelectItem>
+                    <SelectItem value="intermediate">intermediate</SelectItem>
+                    <SelectItem value="advanced">advanced</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
