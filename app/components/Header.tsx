@@ -30,7 +30,7 @@ import { X, Plus } from "lucide-react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth, useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const roadmapSchema = z.object({
   title: z
@@ -48,7 +48,7 @@ export default function Header() {
   const [currentTag, setCurrentTag] = useState("");
   const {} = useAuthActions();
   const { isAuthenticated } = useConvexAuth();
-  const createRoadmap = useMutation(api.mutations.roadmap.createRoadmap)
+  const createRoadmap = useMutation(api.mutations.roadmap.createRoadmap);
 
   const navigate = useNavigate();
 
@@ -92,7 +92,6 @@ export default function Header() {
     setCurrentTag("");
     setIsOpen(false);
     navigate("/roadmap/update/" + id);
-
   };
 
   const handleModalClose = (open: boolean) => {
@@ -106,7 +105,7 @@ export default function Header() {
   return (
     <header className="w-full border-b bg-background">
       <div className="container mx-auto px-4 py-3">
-        {isAuthenticated && (
+        {isAuthenticated ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
@@ -222,7 +221,6 @@ export default function Header() {
                             </div>
                           </FormControl>
                           <FormMessage />
-
                         </FormItem>
                       )}
                     />
@@ -242,6 +240,12 @@ export default function Header() {
               </DialogContent>
             </Dialog>
           </div>
+        ) : (
+          <Button asChild>
+            <Link to={"/signin"} className="flex items-center gap-2">
+              Signin
+            </Link>
+          </Button>
         )}
       </div>
     </header>
