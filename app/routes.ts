@@ -4,4 +4,5 @@ export default [
   index("routes/home.tsx"),
   route("/login", "routes/login.tsx"),
   route("/signup", "routes/signup.tsx"),
+  route("/roadmap", "roadmap/roadmap_details/roadmap-details-screen.tsx")
 ] satisfies RouteConfig;
