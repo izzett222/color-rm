@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Search, Star, Calendar, Users, Tag, X } from 'lucide-react';
 import { Input } from '../components/ui/input';
